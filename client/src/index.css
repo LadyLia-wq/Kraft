@@ -1,0 +1,19 @@
+:root {
+  --cream: #f5ebe0;
+  --tan: #e3d5ca;
+  --caramel: #d5bdaf;
+  --mocha: #7a5230;
+  --coffee: #5c4033;
+  --espresso: #3b2a20;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--espresso);
+}
