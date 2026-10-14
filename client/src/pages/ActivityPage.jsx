@@ -26,8 +26,7 @@ function ActivityPage() {
     <main className="intern-list-page">
       <h2>Activity</h2>
       <p className="intern-list-sub">
-        All interns, active and inactive. Select one to open their board, then
-        use the arrows to go back through past weeks.
+        All interns, active and inactive. Select one to open their board.
       </p>
 
       {loading && <p className="loading">Loading interns…</p>}

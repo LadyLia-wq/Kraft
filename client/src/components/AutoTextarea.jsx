@@ -4,6 +4,8 @@ function AutoTextarea({
   value,
   onChange,
   onSubmit,
+  onBlur,
+  onCancel,
   placeholder,
   className = '',
   inputRef,
@@ -18,6 +20,11 @@ function AutoTextarea({
   }, [value])
 
   function handleKeyDown(e) {
+    if (e.key === 'Escape' && onCancel) {
+      e.preventDefault()
+      onCancel()
+      return
+    }
     if (
       e.key === 'Enter' &&
       !e.shiftKey &&
@@ -37,6 +44,7 @@ function AutoTextarea({
       value={value}
       onChange={onChange}
       onKeyDown={handleKeyDown}
+      onBlur={onBlur}
       placeholder={placeholder}
     />
   )

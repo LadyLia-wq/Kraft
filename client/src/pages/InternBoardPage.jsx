@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '../api'
 import BoardPage from './BoardPage'
+import { ChevronLeft } from 'lucide-react'
 
 function InternBoardPage() {
   const { id } = useParams()
@@ -19,7 +20,10 @@ function InternBoardPage() {
   return (
     <>
       <div className="back-bar">
-        <Link to="/">← All interns</Link>
+        <Link to="/" className="back-pill">
+          <ChevronLeft size={16} aria-hidden="true" />
+          All interns
+        </Link>
       </div>
 
       {error && (

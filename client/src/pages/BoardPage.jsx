@@ -3,6 +3,7 @@ import DayCard from '../components/DayCard'
 import DayView from '../components/DayView'
 import { api } from '../api'
 import { useAuth } from '../auth/AuthContext'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   getMonday,
   addDays,
@@ -42,6 +43,9 @@ function BoardPage({ intern }) {
   const [saveStatus, setSaveStatus] = useState('')
   const pending = useRef({})
   const timers = useRef({})
+  const savedTimer = useRef(null)
+
+  useEffect(() => () => clearTimeout(savedTimer.current), [])
 
   // Whose board is this? An admin looks at an intern's; an intern at their own.
   const ownerId = intern ? intern.id : user.id
@@ -107,7 +111,11 @@ function BoardPage({ intern }) {
           nextSteps: day.nextSteps,
         },
       })
-      if (Object.keys(pending.current).length === 0) setSaveStatus('saved')
+      if (Object.keys(pending.current).length === 0) {
+        setSaveStatus('saved')
+        clearTimeout(savedTimer.current)
+        savedTimer.current = setTimeout(() => setSaveStatus(''), 3000)
+      }
     } catch (err) {
       setSaveStatus('error')
       setError(err.message)
@@ -128,6 +136,7 @@ function BoardPage({ intern }) {
       () => flushSave(updated.date),
       600
     )
+    clearTimeout(savedTimer.current)
     setSaveStatus('saving')
   }
 
@@ -161,18 +170,48 @@ function BoardPage({ intern }) {
     }
   }
 
-  async function toggleReaction(index, type) {
-    setError('')
-    try {
-      await api(
-        `/api/boards/${ownerId}/days/${week[index].date}/reactions/${type}`,
-        { method: 'POST' }
+    async function toggleReaction(index, type) {
+      setError('')
+      const date = week[index].date
+      const had = week[index].reactions[type].includes(user.id)
+
+      // Update the screen straight away, without waiting for the server
+      setBoard((current) =>
+        current.key !== boardKey
+          ? current
+          : {
+              key: boardKey,
+              days: current.days.map((d, i) =>
+                i !== index
+                  ? d
+                  : {
+                      ...d,
+                      reactions: {
+                        ...d.reactions,
+                        [type]: had
+                          ? d.reactions[type].filter((id) => id !== user.id)
+                          : [...d.reactions[type], user.id],
+                      },
+                    }
+              ),
+            }
       )
-      await refreshDiscussion()
-    } catch (err) {
-      setError(err.message)
+
+      try {
+        await api(`/api/boards/${ownerId}/days/${date}/reactions/${type}`, {
+          method: 'POST',
+        })
+        await refreshDiscussion()
+      } catch (err) {
+        setError(err.message)
+        // Put the real numbers back if the save didn't go through
+        try {
+          await refreshDiscussion()
+        } catch {
+          // the error message above already tells the person
+        }
+      }
     }
-  }
 
   const ownerHeading = intern && (
     <h2 className="board-owner">
@@ -205,15 +244,56 @@ function BoardPage({ intern }) {
 
   return (
     <div>
-      {ownerHeading}
+      {!intern && (
+        <div className="welcome">
+          <h2>Welcome back, {user.firstName}</h2>
+          <p>Here's your week.</p>
+        </div>
+      )}
 
-      {readOnly && (
+      <div className={intern ? 'board-toolbar has-owner' : 'board-toolbar'}>
+        {ownerHeading}
+
+        <div className="week-nav">
+          <div className="week-capsule">
+            <button
+              className="week-arrow"
+              aria-label="Previous week"
+              onClick={() => setWeekStart(addDays(weekStart, -7))}
+              disabled={atStart}
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <h2>{formatWeekRange(weekStart)}</h2>
+            <button
+              className="week-arrow"
+              aria-label="Next week"
+              onClick={() => setWeekStart(addDays(weekStart, 7))}
+              disabled={atEnd}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+
+          {!range && (
+            <button
+              className="week-today"
+              onClick={() => setWeekStart(getMonday())}
+              disabled={weekStart.getTime() === getMonday().getTime()}
+            >
+              This week
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* {readOnly && (
         <p className="readonly-note">
           {isHead
             ? "You're viewing an intern's board: read-only. You can react and comment."
             : 'Past day: read-only. You can still react, comment and reply.'}
         </p>
-      )}
+      )} */}
 
       {limited && (
         <p className="readonly-note">
@@ -223,25 +303,6 @@ function BoardPage({ intern }) {
       )}
 
       {error && <p className="form-error board-error">{error}</p>}
-
-      <div className="week-nav">
-        <button
-          onClick={() => setWeekStart(addDays(weekStart, -7))}
-          disabled={atStart}
-        >
-          ←
-        </button>
-        <h2>{formatWeekRange(weekStart)}</h2>
-        <button
-          onClick={() => setWeekStart(addDays(weekStart, 7))}
-          disabled={atEnd}
-        >
-          →
-        </button>
-        {!range && (
-          <button onClick={() => setWeekStart(getMonday())}>This Week</button>
-        )}
-      </div>
 
       <p className="save-status">{saveMessages[saveStatus] || '\u00A0'}</p>
 

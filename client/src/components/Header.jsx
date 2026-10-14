@@ -1,14 +1,22 @@
+import { useState } from 'react'
 import { useAuth } from '../auth/AuthContext'
-import logo from '../assets/DevArpsLogo.png'
+// import logo from '../assets/DevArpsLogo.png'
+import kraftLogo from '../assets/kraft-logo.svg'
 import { NavLink } from 'react-router-dom'
+import ConfirmDialog from './ConfirmDialog'
 
 function Header () {
 
+    const [confirmOpen, setConfirmOpen] = useState(false)
     const { user, signOut } = useAuth()
+
     return (
         <header className="app-header">
-            <img src={logo} alt="DevArps logo" height="30" />
+            {/* <img src={logo} alt="DevArps logo" height="32" /> */}
+            {/* <span className="header-divider" aria-hidden="true" /> */}
+            <img src={kraftLogo} alt="" height="32" />
             <h1>Kraft</h1>
+
             {user?.type === 'head' && (
                 <nav className="header-nav">
                     <NavLink to="/" end>Interns</NavLink>
@@ -17,12 +25,28 @@ function Header () {
             )}
             {user && (
                 <div className="header-user">
-                    <span>
-                    {user.firstName} {user.lastName} · {user.role}
-                    </span>
-                    <button onClick={signOut}>Sign out</button>
+                <span className="header-avatar">
+                    {(user.firstName[0] + user.lastName[0]).toUpperCase()}
+                </span>
+                <span className="header-who">
+                    {user.firstName} {user.lastName}
+                    <small>{user.role}</small>
+                </span>
+                <button onClick={() => setConfirmOpen(true)}>Sign out</button>
                 </div>
             )}
+
+            <ConfirmDialog
+                open={confirmOpen}
+                title="Sign out?"
+                message="Are you sure you want to go ahead and sign out?"
+                confirmLabel="Sign out"
+                onCancel={() => setConfirmOpen(false)}
+                onConfirm={() => {
+                    setConfirmOpen(false)
+                    signOut()
+                }}
+                />
         </header>
     )
 }

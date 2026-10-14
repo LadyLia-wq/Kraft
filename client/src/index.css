@@ -1,10 +1,12 @@
 :root {
-  --cream: #f5ebe0;
-  --tan: #e3d5ca;
-  --caramel: #d5bdaf;
-  --mocha: #7a5230;
-  --coffee: #5c4033;
-  --espresso: #3b2a20;
+  --cream: #f6f5ff;
+  --tan: #ffffff;
+  --caramel: #e1dcf9;
+  --mocha: #5b4bd6;
+  --coffee: #2b2552;
+  --espresso: #1a1730;
+  --muted: #6b6690;
+  --tint: #f0edff;
 }
 
 * {

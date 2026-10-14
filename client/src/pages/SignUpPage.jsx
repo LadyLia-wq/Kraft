@@ -1,9 +1,15 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Mail, KeyRound } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
+import AuthLayout from '../components/AuthLayout'
+import Field from '../components/Field'
+import PasswordField from '../components/PasswordField'
+import Dropdown from '../components/Dropdown'
 
 function SignUpPage() {
   const { user, signUp } = useAuth()
+  const navigate = useNavigate()
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -16,7 +22,6 @@ function SignUpPage() {
   })
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const navigate = useNavigate()
 
   if (user) return <Navigate to="/" replace />
 
@@ -36,8 +41,11 @@ function SignUpPage() {
     setSubmitting(true)
     try {
       await signUp(form)
-        navigate('/signin', {
-        state: { message: 'Account created! Please sign in.', email: form.email },
+      navigate('/signin', {
+        state: {
+          message: 'Account created! Please sign in.',
+          email: form.email,
+        },
       })
     } catch (err) {
       setError(err.message)
@@ -46,104 +54,98 @@ function SignUpPage() {
   }
 
   return (
-    <main className="auth-page">
-      <form className="auth-card" onSubmit={handleSubmit}>
-        <h2>Create your account</h2>
+    <AuthLayout>
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div>
+          <h2 className="auth-title">Create your account</h2>
+          {/* <p className="auth-lead">Choose your role to get started.</p> */}
+        </div>
 
-        <label>
-          First name
-          <input
+        <div className="field-row">
+          <Field
+            label="First name"
             name="firstName"
             value={form.firstName}
             onChange={handleChange}
+            autoComplete="given-name"
             required
           />
-        </label>
-
-        <label>
-          Last name
-          <input
+          <Field
+            label="Last name"
             name="lastName"
             value={form.lastName}
             onChange={handleChange}
+            autoComplete="family-name"
             required
           />
-        </label>
+        </div>
 
-        <label>
-          Role
-          <select
-            name="accountType"
-            value={form.accountType}
-            onChange={handleChange}
-          >
-            <option value="intern">Intern</option>
-            <option value="admin">Admin</option>
-          </select>
-        </label>
+        <Dropdown
+          label="Role"
+          value={form.accountType}
+          onChange={(value) => setForm({ ...form, accountType: value })}
+          options={[
+            { value: 'intern', label: 'Intern' },
+            { value: 'admin', label: 'Admin' },
+          ]}
+        />
 
         {form.accountType === 'admin' && (
           <>
-            <label>
-              Your role (e.g. Head of Engineering)
-              <input
-                name="roleTitle"
-                value={form.roleTitle}
-                onChange={handleChange}
-                required
-              />
-            </label>
-
-            <label>
-              Access code
-              <input
-                type="password"
-                name="accessCode"
-                value={form.accessCode}
-                onChange={handleChange}
-                required
-              />
-            </label>
+            <Field
+              label="Your role"
+              name="roleTitle"
+              value={form.roleTitle}
+              onChange={handleChange}
+              placeholder="e.g. Head of Engineering"
+              required
+            />
+            <Field
+              label="Access code"
+              icon={KeyRound}
+              type="password"
+              name="accessCode"
+              value={form.accessCode}
+              onChange={handleChange}
+              autoComplete="off"
+              required
+            />
           </>
         )}
 
-        <label>
-          Email
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <Field
+          label="Email"
+          icon={Mail}
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          autoComplete="email"
+          required
+        />
 
-        <label>
-          Password
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            minLength={8}
-            required
-          />
-        </label>
+        <PasswordField
+          label="Password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          autoComplete="new-password"
+          minLength={8}
+          required
+        />
 
-        <label>
-          Confirm password
-          <input
-            type="password"
-            name="confirmPassword"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <PasswordField
+          label="Confirm password"
+          name="confirmPassword"
+          value={form.confirmPassword}
+          onChange={handleChange}
+          autoComplete="new-password"
+          required
+        />
 
         {error && <p className="form-error">{error}</p>}
 
-        <button type="submit" disabled={submitting}>
+        <button type="submit" className="auth-submit" disabled={submitting}>
           {submitting ? 'Creating account…' : 'Sign up'}
         </button>
 
@@ -151,7 +153,7 @@ function SignUpPage() {
           Already have an account? <Link to="/signin">Sign in</Link>
         </p>
       </form>
-    </main>
+    </AuthLayout>
   )
 }
 

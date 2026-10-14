@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import RequireAuth from './components/RequireAuth'
 import SignInPage from './pages/SignInPage'
@@ -17,9 +17,11 @@ function Home() {
 }
 
 function App() {
+  const { pathname } = useLocation()
+  const isAuthPage = pathname === '/signin' || pathname === '/signup'
   return (
     <>
-      <Header />
+      {!isAuthPage && <Header />}
       <Routes>
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignUpPage />} />

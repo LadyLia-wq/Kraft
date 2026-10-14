@@ -1,6 +1,7 @@
 function DayCard({ name, date, data, active, onClick }) {
   const total = data.tasks.length
   const done = data.tasks.filter((task) => task.done).length
+  const percent = total === 0 ? 0 : Math.round((done / total) * 100)
 
   return (
     <button
@@ -13,6 +14,9 @@ function DayCard({ name, date, data, active, onClick }) {
       </span>
       <span className="day-card-subject">
         {data.subject || 'No subject yet'}
+      </span>
+      <span className="progress-track" aria-hidden="true">
+        <span className="progress-fill" style={{ width: `${percent}%` }} />
       </span>
       <span className="day-card-progress">
         {done}/{total} tasks

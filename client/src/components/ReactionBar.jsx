@@ -1,31 +1,63 @@
+import { useState } from 'react'
+
 const reactionTypes = [
   { key: 'like', emoji: '👍', label: 'Like' },
   { key: 'love', emoji: '❤️', label: 'Love' },
   { key: 'fire', emoji: '🔥', label: 'Fire' },
 ]
 
-function ReactionBar({ reactions, userName, onChange, disabled }) {
-  function toggle(key) {
-    const names = reactions[key]
-    const updated = names.includes(userName)
-      ? names.filter((name) => name !== userName)
-      : [...names, userName]
-    onChange({ ...reactions, [key]: updated })
+// Eight sparks, spread evenly around a circle
+const sparks = Array.from({ length: 8 }, (_, i) => {
+  const angle = (i / 8) * Math.PI * 2
+  return {
+    x: Math.round(Math.cos(angle) * 28),
+    y: Math.round(Math.sin(angle) * 28),
+  }
+})
+
+function ReactionBar({ reactions, userId, onToggle }) {
+  // How many times each reaction has been switched on here. A new number
+  // restarts the animation.
+  const [plays, setPlays] = useState({})
+
+  function handleClick(key) {
+    if (!reactions[key].includes(userId)) {
+      setPlays((p) => ({ ...p, [key]: (p[key] || 0) + 1 }))
+    }
+    onToggle(key)
   }
 
   return (
     <div className="reaction-bar">
       {reactionTypes.map(({ key, emoji, label }) => {
-        const active = reactions[key].includes(userName)
+        const active = reactions[key].includes(userId)
+        const played = plays[key] || 0
+
         return (
           <button
             key={key}
             className={active ? 'reaction active' : 'reaction'}
-            onClick={() => toggle(key)}
+            onClick={() => handleClick(key)}
             title={label}
-            disabled={disabled}
+            aria-pressed={active}
           >
-            {emoji} {reactions[key].length}
+            <span className="em-wrap">
+              <span key={played} className={played ? 'em pop' : 'em'}>
+                {emoji}
+              </span>
+              {played > 0 && (
+                <span key={`s${played}`} className="sparks" aria-hidden="true">
+                  {sparks.map((s, i) => (
+                    <span
+                      key={i}
+                      className="spark"
+                      style={{ '--x': `${s.x}px`, '--y': `${s.y}px` }}
+                    />
+                  ))}
+                </span>
+              )}
+            </span>
+            <span>{reactions[key].length}</span>
           </button>
         )
       })}
