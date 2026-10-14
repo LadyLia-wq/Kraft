@@ -13,7 +13,12 @@ console.log('DATABASE_URL loaded:', Boolean(process.env.DATABASE_URL))
 
 const app = express()
 
-app.use(cors())
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((s) => s.trim())
+
+app.use(cors({ origin: allowedOrigins }))
+
 app.use(express.json())
 
 app.get('/api/health', (req, res) => {
@@ -34,8 +39,12 @@ app.use('/api/auth', authRoutes)
 app.use('/api/interns', internRoutes)
 app.use('/api/boards', boardRoutes)
 
-const PORT = 4000
-app.listen(PORT, () => {
+if (!process.env.VERCEL) {
+  const PORT = 4000
+  app.listen(PORT, () => {
     console.log(`Kraft server running on http://localhost:${PORT}`)
-})
+  })
+}
+
+export default app
 
