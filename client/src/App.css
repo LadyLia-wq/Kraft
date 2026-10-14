@@ -1275,6 +1275,10 @@ input[type="checkbox"]:focus-visible {
     height: 56px;
   }
 
+  .auth-form {
+    padding: 0;
+  }
+
   .auth-tagline,
   .auth-sub {
     display: none;
