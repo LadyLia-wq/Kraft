@@ -1511,6 +1511,27 @@ input[type="checkbox"]:focus-visible {
   .board {
     padding: 1rem;
   }
+
+    .week-strip {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 0.4rem;
+    padding: 0 0.75rem;
+  }
+
+  .day-card {
+    max-width: none;
+    min-width: 0;
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+    border-radius: 14px;
+  }
+
+  .day-card-subject,
+  .day-card-progress {
+    display: none;
+  }
 }
 
 @media (max-width: 420px) {
