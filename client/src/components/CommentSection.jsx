@@ -13,7 +13,7 @@ function CommentSection({ comments, onAddComment }) {
   }
 
   return (
-    <section className="comment-section">
+    <section className="comment-section" id="discussion">
       <h3>Comments</h3>
 
       <AutoTextarea

@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { pool } from '../db.js'
 import { requireAuth } from '../middleware/auth.js'
 import { isActiveIntern } from '../lib/activity.js'
+import { notify } from '../lib/notify.js'
 
 const router = Router()
 router.use(requireAuth)
@@ -228,17 +229,19 @@ router.post('/:internId/days/:date/comments', async (req, res) => {
       return res.status(404).json({ error: 'Not found.' })
     }
 
-    const parentId = req.body.parentId || null
+        const parentId = req.body.parentId || null
+    let parentAuthorId = null
     if (parentId) {
       // A reply must point at a main comment on this same board and day.
       const parent = await pool.query(
-        `select id from comments
+        `select id, author_id from comments
          where id = $1 and intern_id = $2 and day_date = $3 and parent_id is null`,
         [parentId, internId, date]
       )
       if (parent.rows.length === 0) {
         return res.status(400).json({ error: 'That comment no longer exists.' })
       }
+      parentAuthorId = parent.rows[0].author_id
     }
 
     await pool.query(
@@ -246,6 +249,27 @@ router.post('/:internId/days/:date/comments', async (req, res) => {
        values ($1, $2, $3, $4, $5)`,
       [internId, date, parentId, req.auth.id, text]
     )
+
+    if (parentAuthorId) {
+      await notify({
+        userId: parentAuthorId,
+        actorId: req.auth.id,
+        ownerId: internId,
+        type: 'reply',
+        day: date,
+      })
+    }
+    
+    if (internId !== parentAuthorId) {
+      await notify({
+        userId: internId,
+        actorId: req.auth.id,
+        ownerId: internId,
+        type: 'comment',
+        day: date,
+      })
+    }
+
     res.status(201).json({ ok: true })
   } catch (err) {
     fail(res, err)
@@ -279,6 +303,14 @@ router.post('/:internId/days/:date/reactions/:type', async (req, res) => {
          values ($1, $2, $3, $4)`,
         [internId, date, req.auth.id, type]
       )
+      await notify({
+        userId: internId,
+        actorId: req.auth.id,
+        ownerId: internId,
+        type: 'reaction',
+        day: date,
+        reaction: type,
+      })
     }
     res.json({ ok: true })
   } catch (err) {

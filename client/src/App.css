@@ -1583,8 +1583,139 @@ input[type="checkbox"]:focus-visible {
   display: none;
 }
 
+/* ============ Notification bell ============ */
+
+.bell-wrap {
+  position: relative;
+}
+
+.header-user .bell-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mocha);
+}
+
+.header-user .bell-btn:hover {
+  background: var(--tint);
+}
+
+.bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--mocha);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px var(--tan);
+}
+
+.bell-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 25;
+  width: 360px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: var(--tan);
+  border: 1px solid var(--caramel);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(43, 37, 82, 0.12);
+}
+
+.bell-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.bell-head h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--coffee);
+}
+
+.header-user .bell-markall {
+  background: none;
+  border: none;
+  padding: 0.2rem 0.4rem;
+  color: var(--mocha);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.header-user .bell-markall:hover {
+  background: var(--tint);
+}
+
+.bell-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-user .bell-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-top: 1px solid var(--tint);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.7rem 1rem;
+  color: var(--espresso);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.header-user .bell-item:hover {
+  background: var(--cream);
+}
+
+.header-user .bell-item.unread {
+  background: var(--tint);
+  box-shadow: inset 3px 0 0 var(--mocha);
+}
+
+.bell-item small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.bell-empty {
+  margin: 0;
+  padding: 1rem 1rem 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.bell-backdrop {
+  display: none;
+}
+
 @media (max-width: 640px) {
-    .app-header {
+  .app-header {
     padding: 0.75rem 1rem;
     flex-wrap: wrap;
     row-gap: 0.6rem;
@@ -1615,7 +1746,7 @@ input[type="checkbox"]:focus-visible {
     display: none;
   }
 
-    .board-toolbar,
+  .board-toolbar,
   .board-toolbar.has-owner {
     justify-content: center;
     text-align: center;
@@ -1629,7 +1760,7 @@ input[type="checkbox"]:focus-visible {
     padding: 1rem;
   }
 
-    .name-full,
+  .name-full,
   .week-full {
     display: none;
   }
@@ -1690,7 +1821,7 @@ input[type="checkbox"]:focus-visible {
     font-size: 0.75rem;
     white-space: nowrap;
   }
-  
+
   .profile-hero {
     flex-direction: column;
     text-align: center;
@@ -1715,6 +1846,43 @@ input[type="checkbox"]:focus-visible {
   .day-card-subject,
   .day-card-progress {
     display: none;
+  }
+
+  .bell-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 24;
+    background: rgba(43, 37, 82, 0.35);
+  }
+
+  .bell-panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    width: auto;
+    max-height: 75vh;
+    max-height: 75dvh;
+    border-width: 1px 0 0;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -8px 24px rgba(43, 37, 82, 0.15);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .header-user .bell-markall {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .bell-head {
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  .header-user .bell-item {
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
   }
 }
 

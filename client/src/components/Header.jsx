@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthContext'
 // import kraftLogo from '../assets/kraft-logo.svg'
 import { NavLink, Link } from 'react-router-dom'
 import ConfirmDialog from './ConfirmDialog'
+import NotificationBell from './NotificationBell'
 
 function Header () {
 
@@ -25,6 +26,7 @@ function Header () {
             )}
             {user && (
                 <div className="header-user">
+                <NotificationBell />
                 <Link to="/profile" className="header-avatar" aria-label="Your profile">
                     {(user.firstName[0] + user.lastName[0]).toUpperCase()}
                 </Link>

@@ -4,6 +4,7 @@ import DayView from '../components/DayView'
 import { api } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
 import {
   getMonday,
   addDays,
@@ -85,6 +86,29 @@ function BoardPage({ intern }) {
       cancelled = true
     }
   }, [ownerId, weekKey, noEntries])
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [pendingScroll, setPendingScroll] = useState(false)
+
+  // A notification link looks like ?date=2026-10-14: jump to that day.
+  useEffect(() => {
+    const target = searchParams.get('date')
+    if (!target) return
+    const d = parseKey(target)
+    setWeekStart(getMonday(d))
+    setSelectedDay(Math.min(4, Math.max(0, d.getDay() - 1)))
+    setPendingScroll(true)
+    setSearchParams({}, { replace: true })
+  }, [searchParams, setSearchParams])
+
+  // Scroll to the comments once that week has loaded.
+  useEffect(() => {
+    if (!pendingScroll || !week) return
+    document
+      .getElementById('discussion')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setPendingScroll(false)
+  }, [pendingScroll, week])
 
   // Which of the five days are shown this week?
   const visibleIndexes = [0, 1, 2, 3, 4].filter((i) => {

@@ -4,6 +4,7 @@ import { pool } from './db.js'
 import authRoutes from './routes/auth.js'
 import internRoutes from './routes/interns.js'
 import boardRoutes from './routes/boards.js'
+import notificationsRouter from './routes/notifications.js'
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is missing from the .env file')
@@ -38,6 +39,7 @@ app.get('/api/db-check', async (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/interns', internRoutes)
 app.use('/api/boards', boardRoutes)
+app.use('/api/notifications', notificationsRouter)
 
 if (!process.env.VERCEL) {
   const PORT = 4000
