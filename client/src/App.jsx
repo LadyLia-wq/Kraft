@@ -10,6 +10,7 @@ import './App.css'
 import RequireHead from './components/RequireHead'
 import InternBoardPage from './pages/InternBoardPage'
 import ActivityPage from './pages/ActivityPage'
+import ProfilePage from './pages/ProfilePage'
 
 function Home() {
   const { user } = useAuth()
@@ -50,6 +51,14 @@ function App() {
               <RequireHead>
                 <ActivityPage />
               </RequireHead>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth>
+              <ProfilePage />
             </RequireAuth>
           }
         />

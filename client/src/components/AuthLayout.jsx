@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import kraftLogo from '../assets/kraft-logo.svg'
+// import kraftLogo from '../assets/kraft-logo.svg'
 
 function AuthLayout({ children }) {
   return (
     <div className="auth-shell">
       <div className="auth-topbar">
-        <img src={kraftLogo} alt="" width="34" height="34" />
+        <img src="/kraft-logo.svg" alt="" width="34" height="34" />
         <span className="auth-brand">Kraft</span>
       </div>
 
@@ -20,7 +20,7 @@ function AuthLayout({ children }) {
 
         <div className="auth-right">
           <div className="auth-arch">
-            <img src={kraftLogo} alt="" width="84" height="84" />
+            <img src="/kraft-logo.svg" alt="" width="84" height="84" />
             <p className="auth-tagline">Your week, in one place</p>
             <p className="auth-sub">Internship Report Portal</p>
           </div>

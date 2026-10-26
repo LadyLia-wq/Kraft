@@ -22,6 +22,14 @@ const saveMessages = {
   error: 'Could not save',
 }
 
+function formatShortWeek(monday) {
+  const friday = addDays(monday, 4)
+  const month = (d) => d.toLocaleDateString('en-US', { month: 'short' })
+  return month(monday) === month(friday)
+    ? `${month(monday)} ${monday.getDate()} – ${friday.getDate()}`
+    : `${month(monday)} ${monday.getDate()} – ${month(friday)} ${friday.getDate()}`
+}
+
 function BoardPage({ intern }) {
   const { user } = useAuth()
 
@@ -215,7 +223,10 @@ function BoardPage({ intern }) {
 
   const ownerHeading = intern && (
     <h2 className="board-owner">
-      {intern.firstName} {intern.lastName}'s board
+        <span className="name-full">
+          {intern.firstName} {intern.lastName}'s board
+        </span>
+        <span className="name-short">{intern.firstName}'s board</span>
       {limited && <span className="status-badge inactive">Inactive</span>}
     </h2>
   )
@@ -264,7 +275,10 @@ function BoardPage({ intern }) {
             >
               <ChevronLeft size={18} />
             </button>
-            <h2>{formatWeekRange(weekStart)}</h2>
+            <h2>
+              <span className="week-full">{formatWeekRange(weekStart)}</span>
+              <span className="week-short">{formatShortWeek(weekStart)}</span>
+            </h2>
             <button
               className="week-arrow"
               aria-label="Next week"

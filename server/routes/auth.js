@@ -148,4 +148,91 @@ router.get('/me', requireAuth, async (req, res) => {
   }
 })
 
+router.put('/profile', requireAuth, async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body
+
+    if (!firstName?.trim() || !lastName?.trim() || !email?.trim()) {
+      return res
+        .status(400)
+        .json({ error: 'First name, last name and email are required.' })
+    }
+
+    const result = await pool.query(
+      `update users
+       set first_name = $1, last_name = $2, email = $3
+       where id = $4
+       returning *`,
+      [
+        firstName.trim(),
+        lastName.trim(),
+        email.trim().toLowerCase(),
+        req.auth.id,
+      ]
+    )
+
+    if (!result.rows[0]) {
+      return res.status(401).json({ error: 'Account not found.' })
+    }
+
+    res.json({ user: publicUser(result.rows[0]) })
+  } catch (err) {
+    if (err.code === '23505') {
+      return res.status(409).json({ error: 'That email is already in use.' })
+    }
+    console.error(err)
+    res.status(500).json({ error: 'Something went wrong. Please try again.' })
+  }
+})
+
+router.put('/password', requireAuth, async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Please fill in all password fields.' })
+    }
+    if (newPassword.length < 8) {
+      return res
+        .status(400)
+        .json({ error: 'New password must be at least 8 characters.' })
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'New passwords do not match.' })
+    }
+
+    const result = await pool.query(
+      'select password_hash from users where id = $1',
+      [req.auth.id]
+    )
+    const user = result.rows[0]
+    if (!user) {
+      return res.status(401).json({ error: 'Account not found.' })
+    }
+
+    const currentOk = await bcrypt.compare(currentPassword, user.password_hash)
+    if (!currentOk) {
+      return res.status(400).json({ error: 'Your current password is incorrect.' })
+    }
+
+    const sameAsOld = await bcrypt.compare(newPassword, user.password_hash)
+    if (sameAsOld) {
+      return res
+        .status(400)
+                .json({ error: 'New password must be different from your current one.' })
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10)
+    await pool.query('update users set password_hash = $1 where id = $2', [
+      newHash,
+      req.auth.id,
+    ])
+
+    res.json({ message: 'Password updated.' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Something went wrong. Please try again.' })
+  }
+})
+
 export default router
