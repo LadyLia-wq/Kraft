@@ -171,7 +171,9 @@ a.header-avatar:hover {
 }
 
 .back-bar {
-  display: none;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 0;
 }
 
 .back-pill {
@@ -2205,6 +2207,8 @@ input[type="checkbox"]:focus-visible {
     border-radius: 999px;
     background: none;
     color: var(--mocha);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.2s;
@@ -2221,17 +2225,24 @@ input[type="checkbox"]:focus-visible {
   }
 
   .tab-item.active svg {
-    filter: drop-shadow(0 0 8px rgba(91, 75, 214, 0.95));
+    filter: drop-shadow(0 0 6px var(--coffee))
+      drop-shadow(0 0 12px rgba(62, 39, 125, 0.6));
+    stroke-width: 2.4;
+  }
+
+  .tab-item:not(.active) svg {
+    color: var(--mocha);
+    /* opacity: 0.55; */
   }
 
   .tab-item.active::after {
     content: '';
     position: absolute;
-    bottom: 7px;
+    bottom: 6px;
     left: 50%;
-    width: 5px;
-    height: 5px;
-    margin-left: -2.5px;
+    width: 7px;
+    height: 7px;
+    margin-left: -3.5px;
     border-radius: 50%;
     background: #f5b942;
   }
@@ -2240,7 +2251,6 @@ input[type="checkbox"]:focus-visible {
     outline: 2px solid var(--caramel);
     outline-offset: -2px;
   }
-
   .tab-item .bell-badge {
     top: 6px;
     right: calc(50% - 22px);
@@ -2254,6 +2264,10 @@ input[type="checkbox"]:focus-visible {
   .undo-toast,
   .toast {
     bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+  
+  .back-bar {
+    display: none;
   }
 }
 

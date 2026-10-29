@@ -28,7 +28,7 @@ function Header () {
             )}
             {user && (
                 <div className="header-user">
-                {/* <NotificationBell /> */}
+                {!isPhone && <NotificationBell />}
                 <Link to="/profile" className="header-avatar" aria-label="Your profile">
                     {(user.firstName[0] + user.lastName[0]).toUpperCase()}
                 </Link>
