@@ -12,7 +12,7 @@ body {
 }
 
 .app-header {
-  background: var(--tan);
+  background: var(--cream);
   color: var(--coffee);
   border-bottom: 1px solid var(--caramel);
   padding-block: 0.75rem;
