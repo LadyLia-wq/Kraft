@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { api } from '../api'
 import BoardPage from './BoardPage'
 import { ChevronLeft } from 'lucide-react'
+import Loader from '../components/Loader'
 
 function InternBoardPage() {
   const { id } = useParams()
@@ -31,7 +32,7 @@ function InternBoardPage() {
           <p className="form-error">{error}</p>
         </main>
       )}
-      {!intern && !error && <p className="loading">Loading…</p>}
+      {!intern && !error && <Loader />}
       {intern && <BoardPage key={intern.id} intern={intern} />}
     </>
   )

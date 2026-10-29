@@ -4,6 +4,7 @@ import { Bell } from 'lucide-react'
 import { api } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import { describe } from '../components/NotificationBell'
+import Loader from '../components/Loader'
 
 function timeAgo(value) {
   const secs = Math.max(0, (Date.now() - new Date(value).getTime()) / 1000)
@@ -78,7 +79,7 @@ function NotificationsPage() {
       </div>
 
       {loading ? (
-        <p className="notif-empty">Loading…</p>
+        <Loader />
       ) : items.length === 0 ? (
         <div className="notif-empty">
           <Bell size={28} />

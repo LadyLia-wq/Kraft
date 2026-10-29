@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
 import { useAuth } from '../auth/AuthContext'
+import Loader from '../components/Loader'
 
 function HeadHomePage() {
   const { user } = useAuth()
@@ -21,8 +22,7 @@ function HeadHomePage() {
       <h2>Welcome, {user.firstName}</h2>
       <p className="intern-list-sub">Select an intern to view their board.</p>
 
-      {loading && <p className="loading">Loading interns…</p>}
-      {error && <p className="form-error">{error}</p>}
+      {loading && <Loader label="Loading interns…" />}      {error && <p className="form-error">{error}</p>}
       {!loading && !error && interns.length === 0 && (
         <p className="entry-empty">No active interns right now.</p>
       )}

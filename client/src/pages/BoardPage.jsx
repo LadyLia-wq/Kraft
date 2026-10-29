@@ -5,6 +5,7 @@ import { api } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
+import Loader from '../components/Loader'
 import {
   getMonday,
   addDays,
@@ -273,8 +274,7 @@ function BoardPage({ intern }) {
         <p className="form-error">{error}</p>
       </main>
     ) : (
-      <p className="loading">Loading board…</p>
-    )
+      <Loader label="Loading board…" />    )
   }
 
   return (

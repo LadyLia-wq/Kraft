@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
+import Loader from '../components/Loader'
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-US', {
@@ -29,8 +30,7 @@ function ActivityPage() {
         All interns, active and inactive. Select one to open their board.
       </p>
 
-      {loading && <p className="loading">Loading interns…</p>}
-      {error && <p className="form-error">{error}</p>}
+      {loading && <Loader label="Loading interns…" />}      {error && <p className="form-error">{error}</p>}
       {!loading && !error && interns.length === 0 && (
         <p className="entry-empty">No interns have signed up yet.</p>
       )}
