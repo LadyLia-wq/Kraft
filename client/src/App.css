@@ -1,4 +1,15 @@
 /* Header */
+html,
+body {
+  background: var(--cream);
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding-top: env(safe-area-inset-top);
+}
 
 .app-header {
   background: var(--tan);
@@ -160,9 +171,7 @@ a.header-avatar:hover {
 }
 
 .back-bar {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1rem 1rem 0;
+  display: none;
 }
 
 .back-pill {
@@ -1324,6 +1333,79 @@ input[type="checkbox"]:focus-visible {
   color: var(--muted);
 }
 
+
+.notif-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.notif-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.notif-page-head h2 {
+  margin: 0;
+  color: var(--espresso);
+}
+
+.notif-markall {
+  background: none;
+  border: none;
+  color: var(--mocha);
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 0.25rem;
+  cursor: pointer;
+}
+
+.notif-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notif-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+  background: var(--tan);
+  border: 1px solid var(--caramel);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  color: var(--coffee);
+  cursor: pointer;
+}
+
+.notif-card.unread {
+  background: var(--tint);
+  border-left: 4px solid var(--mocha);
+}
+
+.notif-time {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+
 /* ============ Small screens (keep these last) ============ */
 
 @media (max-width: 760px) {
@@ -1714,6 +1796,31 @@ input[type="checkbox"]:focus-visible {
   display: none;
 }
 
+.profile-signout {
+  display: none;
+}
+
+.profile-signout .profile-signout-btn {
+  width: 100%;
+  background: var(--tan);
+  color: #8b2e1f;
+  border: 1px solid var(--caramel);
+  border-radius: 999px;
+  padding: 0.8rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.profile-signout .profile-signout-btn:hover {
+  background: var(--cream);
+}
+
+.bottom-nav,
+.bottom-nav-spacer {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .app-header {
     padding: 0.75rem 1rem;
@@ -1883,6 +1990,73 @@ input[type="checkbox"]:focus-visible {
   .header-user .bell-item {
     padding: 0.9rem 1rem;
     font-size: 0.9rem;
+  }
+
+    .profile-signout {
+    display: block;
+    margin-top: 1rem;
+  }
+
+  .bottom-nav-spacer {
+    display: block;
+    height: calc(4.25rem + env(safe-area-inset-bottom));
+  }
+
+  .bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    display: flex;
+    background: var(--tan);
+    border-top: 1px solid var(--caramel);
+    padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom));
+  }
+
+  .tab-wrap {
+    flex: 1;
+    display: flex;
+  }
+
+  .tab-item {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 48px;
+    padding: 0.25rem 0;
+    border: none;
+    border-radius: 12px;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.7rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .tab-item.active {
+    color: var(--mocha);
+    font-weight: 600;
+  }
+
+  .tab-item:focus-visible {
+    outline: 2px solid var(--mocha);
+    outline-offset: -2px;
+  }
+
+  .tab-item .bell-badge {
+    top: 2px;
+    right: calc(50% - 22px);
+  }
+
+  .undo-toast,
+  .toast {
+    bottom: calc(5rem + env(safe-area-inset-bottom));
   }
 }
 

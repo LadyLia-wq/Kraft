@@ -11,6 +11,9 @@ import RequireHead from './components/RequireHead'
 import InternBoardPage from './pages/InternBoardPage'
 import ActivityPage from './pages/ActivityPage'
 import ProfilePage from './pages/ProfilePage'
+import BottomNav from './components/BottomNav'
+import { useIsPhone } from './hooks/useIsPhone'
+import NotificationsPage from './pages/NotificationsPage'
 
 function Home() {
   const { user } = useAuth()
@@ -19,6 +22,7 @@ function Home() {
 
 function App() {
   const { pathname } = useLocation()
+  const isPhone = useIsPhone()
   const isAuthPage = pathname === '/signin' || pathname === '/signup'
   return (
     <>
@@ -62,8 +66,17 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route
+          path="/notifications"
+          element={
+            <RequireAuth>
+              <NotificationsPage />
+            </RequireAuth>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      {!isAuthPage && isPhone && <BottomNav />}
     </>
   )
 }

@@ -1,0 +1,11 @@
+{
+  "name": "Kraft",
+  "short_name": "Kraft",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f5ff",
+  "theme_color": "#f6f5ff",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

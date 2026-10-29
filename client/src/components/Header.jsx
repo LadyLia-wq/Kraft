@@ -5,11 +5,13 @@ import { useAuth } from '../auth/AuthContext'
 import { NavLink, Link } from 'react-router-dom'
 import ConfirmDialog from './ConfirmDialog'
 import NotificationBell from './NotificationBell'
+import { useIsPhone } from '../hooks/useIsPhone'
 
 function Header () {
 
     const [confirmOpen, setConfirmOpen] = useState(false)
     const { user, signOut } = useAuth()
+    const isPhone = useIsPhone()
 
     return (
         <header className="app-header">
@@ -18,7 +20,7 @@ function Header () {
             <img src="/kraft-logo.svg" alt="" height="32" />
             <h1>Kraft</h1>
 
-            {user?.type === 'head' && (
+            {!isPhone && user?.type === 'head' && (
                 <nav className="header-nav">
                     <NavLink to="/" end>Interns</NavLink>
                     <NavLink to="/activity">Activity</NavLink>
@@ -26,7 +28,7 @@ function Header () {
             )}
             {user && (
                 <div className="header-user">
-                <NotificationBell />
+                {/* <NotificationBell /> */}
                 <Link to="/profile" className="header-avatar" aria-label="Your profile">
                     {(user.firstName[0] + user.lastName[0]).toUpperCase()}
                 </Link>

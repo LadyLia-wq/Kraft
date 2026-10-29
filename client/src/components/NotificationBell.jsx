@@ -26,7 +26,7 @@ function timeAgo(iso) {
   return `${Math.round(hours / 24)}d ago`
 }
 
-function describe(n) {
+export function describe(n) {
   const day = formatDay(n.day)
   if (n.type === 'reply') return `replied to your comment on ${day}`
   if (n.type === 'reaction') {
@@ -35,7 +35,7 @@ function describe(n) {
   return `commented on your report for ${day}`
 }
 
-function NotificationBell() {
+function NotificationBell({ tab = false }) {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -105,10 +105,10 @@ function NotificationBell() {
   }
 
   return (
-    <div className="bell-wrap" ref={wrapRef}>
+    <div className={tab ? 'bell-wrap tab-wrap' : 'bell-wrap'} ref={wrapRef}>
       <button
         type="button"
-        className="bell-btn"
+        className={tab ? 'tab-item' : 'bell-btn'}
         aria-label={
           unread > 0 ? `Notifications, ${unread} unread` : 'Notifications'
         }
@@ -116,7 +116,8 @@ function NotificationBell() {
         aria-haspopup="true"
         onClick={toggle}
       >
-        <Bell size={20} />
+        <Bell size={tab ? 22 : 20} />
+        {tab && <span>Alerts</span>}
         {unread > 0 && (
           <span className="bell-badge" aria-hidden="true">
             {unread > 9 ? '9+' : unread}

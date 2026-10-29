@@ -3,6 +3,7 @@ import { Eye, EyeOff, ChevronLeft } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
+import ConfirmDialog from '../components/ConfirmDialog'
 
 function PasswordInput({ id, label, value, onChange, autoComplete }) {
   const [show, setShow] = useState(false)
@@ -30,7 +31,8 @@ function PasswordInput({ id, label, value, onChange, autoComplete }) {
 }
 
 function ProfilePage() {
-  const { user, updateUser } = useAuth()
+  const { user, updateUser, signOut } = useAuth()
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const [firstName, setFirstName] = useState(user.firstName)
   const [lastName, setLastName] = useState(user.lastName)
@@ -233,6 +235,28 @@ function ProfilePage() {
         </form>
       </section>
 
+      <div className="profile-signout">
+        <button
+          type="button"
+          className="profile-signout-btn"
+          onClick={() => setConfirmOpen(true)}
+        >
+          Sign out
+        </button>
+      </div>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Sign out?"
+        message="Are you sure you want to go ahead and sign out?"
+        confirmLabel="Sign out"
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={() => {
+          setConfirmOpen(false)
+          signOut()
+        }}
+      />
+      
       {toast && (
         <div className="toast" role="status">
           {toast}
